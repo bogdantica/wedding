@@ -13,7 +13,8 @@
     <title>Nunta Lu' Puiu</title>
 
     <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- Custom CSS -->
     <link href="/css/full-image.css" rel="stylesheet">
@@ -35,7 +36,8 @@
 <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
             </button>
@@ -57,58 +59,61 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12 text-center">
-            <form action="#" method="GET" role="form">
-
-                <div class="form-group">
-                    <label for=""></label>
-                    <input type="text" class="form-control input-lg" name="guests" id="" placeholder="Cauta dupa nume...">
-                </div>
-
-
-            </form>
+            <div class="form-group">
+                <label for=""></label>
+                <input type="text" class="form-control input-lg" name="guests" id="guestsSearch"
+                       placeholder="Cauta dupa nume...">
+            </div>
         </div>
     </div>
 
 
-    <div class="row">
+    <div class="row mb-1" >
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <table id="guestsTable" class="display" width="100%"></table>
+            <table id="guestsTable" class="display" width="100%">
+                <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Table</td>
+                </tr>
+                </thead>
+            </table>
         </div>
     </div>
 
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
 
 <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 
 
 <script>
 
-    var dataSet = [
-        [ "Tica Bogdan", "Masa 4" ],
-        [ "Rusu Razvan", "Masa 4" ],
-        [ "Puiu Ionel", "Masa 1" ]
-    ];
-
-
-
-        $(document).ready(function() {
-        $('#guestsTable').DataTable( {
-            data: dataSet,
-            columns: [
-                { title: "Nume" },
-                { title: "Masa" }
-            ],
+    $(document).ready(function () {
+        var table = $('#guestsTable').DataTable({
             bSort: false,
-            searching: false,
-            "paging":   false,
             "ordering": false,
-            "info":     false
-        } );
-    } );
+            "info": false,
+            pageLength: 15,
+            columns: [
+                {data: 'name', name: 'name'},
+                {data: 'table', name: 'table'}
+            ],
+            "serverSide": true,
+            "ajax": "/search"
+        });
+
+        $('#guestsSearch').on('keyup', function () {
+            var searchString = $(this).val();
+            table.search(searchString).draw();
+        });
+
+    });
 
 </script>
 

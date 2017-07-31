@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', [
+Route::get('/{search?}', [
     'as' => 'landing',
     'uses' => 'GuestsController@landing'
  ]);

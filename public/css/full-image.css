@@ -18,9 +18,16 @@ body {
     background-size: cover;
 }
 
+#guestsTable thead {
+    display: none !important;
+}
 
-#guestsTable thead{
-    display: none!important;
+ .dataTables_length, #guestsTable_filter {
+    display: none;
+}
+
+.dataTables_paginate.paging_simple_numbers{
+    margin-bottom: 0.5em!important;
 }
 
 ::-webkit-input-placeholder {
@@ -31,7 +38,7 @@ body {
     text-align: center;
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
+::-moz-placeholder { /* Firefox 19+ */
     text-align: center;
 }
 
