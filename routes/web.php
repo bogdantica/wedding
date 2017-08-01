@@ -11,10 +11,17 @@
 |
 */
 
+
+Route::match(['post','get'],'/guests', [
+    'as' => 'guests',
+    'uses' => 'GuestsController@list'
+]);
+
 Route::get('/{search?}', [
     'as' => 'landing',
     'uses' => 'GuestsController@landing'
- ]);
+]);
+
 
 Auth::routes();
 

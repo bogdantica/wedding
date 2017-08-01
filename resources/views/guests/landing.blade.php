@@ -17,8 +17,8 @@
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- Custom CSS -->
-    <link href="/css/full-image.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="/css/full-image.css" rel="stylesheet">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -62,7 +62,7 @@
             <div class="form-group">
                 <label for=""></label>
                 <input type="text" class="form-control input-lg" name="guests" id="guestsSearch"
-                       placeholder="Cauta dupa nume...">
+                       placeholder="Cauta dupa nume..." autocomplete="off">
             </div>
         </div>
     </div>

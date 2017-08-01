@@ -22,12 +22,19 @@ body {
     display: none !important;
 }
 
- .dataTables_length, #guestsTable_filter {
+.dataTables_length, #guestsTable_filter {
     display: none;
 }
 
-.dataTables_paginate.paging_simple_numbers{
-    margin-bottom: 0.5em!important;
+.dataTables_paginate.paging_simple_numbers {
+    margin-bottom: 0.5em !important;
+    margin-top: 0.5em !important;
+    padding-bottom: 5px;
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: #c1c1c1 !important
 }
 
 ::-webkit-input-placeholder {
@@ -45,3 +52,4 @@ body {
 :-ms-input-placeholder {
     text-align: center;
 }
+

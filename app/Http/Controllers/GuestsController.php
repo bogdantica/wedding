@@ -14,7 +14,7 @@ class GuestsController extends Controller
             return view('guests.landing');
         }
 
-        $query = Guest::select('name', 'table');
+        $query = Guest::select('name', 'table')->orderBy('name');
 
 
         if ($request->has('search.value')) {
@@ -47,9 +47,52 @@ class GuestsController extends Controller
         return Datatables::collection($guests)->make(true);
     }
 
-    public function search(Request $request)
+    public function list(Request $request)
     {
-        return Datatables::eloquent(Guest::query())->make(true);
+
+        if (count($request->all())) {
+
+            $table = strtolower($request->table);
+            $table = str_replace('masa', '', $table);
+            $table = trim($table);
+            $request->merge(['table' => $table]);
+
+            $this->validate($request, [
+                'name' => 'string|required',
+                'table' => 'numeric|required|between:0,50'
+            ]);
+
+            if (!$request->has('id')) {
+
+                $guest = Guest::create([
+                    'name' => $request->name,
+                    'table' => $request->table
+                ]);
+
+            }else{
+
+                $this->validate($request, [
+                    'id' => 'required|exists:guests',
+                ]);
+
+                $guest = Guest::find($request->id);
+
+
+            }
+
+
+            $guest->update($request->only('name', 'table'));
+            $guest->table = 'Masa ' . $guest->table;
+            return $guest;
+        }
+
+
+        $guests = Guest::orderBy('name')->get();
+
+
+        return view('guests.list', compact('guests'));
+
     }
+
 
 }

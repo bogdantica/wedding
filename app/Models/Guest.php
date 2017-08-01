@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Guest extends Model
 {
-    
+    public $timestamps = false;
+    protected $fillable = [
+        'name',
+        'table'
+    ];
 }
