@@ -23,6 +23,8 @@ class GuestsController extends Controller
             return view('guests.landing');
         }
 
+        $cache = '-';
+
         $query = Guest::select('name', 'table')->orderBy('name');
 
 
@@ -34,28 +36,33 @@ class GuestsController extends Controller
                 $query->where('table', $string);
 
             } else {
+
+                $string = strtolower($string);
+
                 $query->where(\DB::raw('LOWER(name)'), 'LIKE', '%' . $string . '%');
             }
 
+            $cache .= $string;
+
         }
 
-        $guests = $this->getByQuery($query);
+        $guests = $this->getByQuery($query, $cache);
 
 
 
         return Datatables::collection($guests)->make(true);
     }
 
-    protected function getByQuery($query)
+    protected function getByQuery($query, $suffix)
     {
-        return \Cache::rememberForever('guestListCached', function () use ($query) {
+//        return \Cache::rememberForever('guestListCached' . $suffix, function () use ($query) {
             return $query->get()->map(function ($guest) {
                 return [
                     'name' => $guest->name,
                     'table' => 'Masa ' . $guest->table
                 ];
             });
-        });
+//        });
 
 
     }
@@ -163,7 +170,7 @@ class GuestsController extends Controller
 
             $guestList = \Cache::get('importFileGuests');
 
-            \Cache::forget('guestListCached');
+//            \Cache::forget('guestListCached');
             \Cache::forget('importFileGuests');
 
 
