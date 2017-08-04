@@ -99,7 +99,8 @@
                     for (var j in response[i]) {
                         new PNotify({
                             text: response[i][j],
-                            type: 'error'
+                            type: 'error',
+                            delay: 300
                         });
                     }
                 }
@@ -157,7 +158,8 @@
 
                 new PNotify({
                     text: 'Modificat',
-                    type: 'success'
+                    type: 'success',
+                    delay: 200
                 });
 
             },
