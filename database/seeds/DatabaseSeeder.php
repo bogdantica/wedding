@@ -11,6 +11,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        \DB::table('guests')->delete();
+
+        $users = [
+            'tikagnus',
+            'puiu',
+            'andreea'
+        ];
+
+        foreach ($users as $user) {
+
+            \App\User::firstOrCreate([
+                'name' => 'User',
+                'email' => $user . '@gmail.com',
+                'password' => bcrypt('anaaremere')
+            ]);
+        }
+
+        \Cache::forget('guestListCached');
+
     }
 }

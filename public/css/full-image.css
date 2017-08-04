@@ -53,3 +53,18 @@ body {
     text-align: center;
 }
 
+
+.full-width{
+    width: 100% ;
+}
+#searchclear {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    bottom: 0;
+    height: 14px;
+    margin: 10px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #ccc;
+}

@@ -46,7 +46,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="#">Admin</a>
+                    <a href="{{ route('guests') }}">Admin</a>
                 </li>
             </ul>
         </div>
@@ -60,9 +60,16 @@
     <div class="row">
         <div class="col-xs-12 text-center">
             <div class="form-group">
-                <label for=""></label>
-                <input type="text" class="form-control input-lg" name="guests" id="guestsSearch"
+                <div class="btn-group full-width">
+
+                    <input type="text" class="form-control input-lg" name="guests" id="guestsSearch"
                        placeholder="Cauta dupa nume..." autocomplete="off">
+                    <span id="searchclear" class="glyphicon glyphicon-remove-circle"></span>
+                </div>
+
+                {{--<input id="searchinput" type="search" class="form-control">--}}
+
+
             </div>
         </div>
     </div>
@@ -95,6 +102,12 @@
 <script>
 
     $(document).ready(function () {
+
+        $('#searchclear').click(function () {
+            $('#guestsSearch').val('').trigger('keyup');
+        });
+
+
         var table = $('#guestsTable').DataTable({
             bSort: false,
             "ordering": false,
@@ -108,10 +121,21 @@
             "ajax": "/search"
         });
 
+
+        var event;
+
         $('#guestsSearch').on('keyup', function () {
             var searchString = $(this).val();
-            table.search(searchString).draw();
+            finalEvent(searchString);
         });
+
+        function finalEvent(searchString) {
+            clearTimeout(event);
+            event = setTimeout(function () {
+                table.search(searchString).draw();
+            }, 300)
+
+        }
 
     });
 

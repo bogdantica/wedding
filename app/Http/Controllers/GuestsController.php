@@ -4,10 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Guest;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Readers\LaravelExcelReader;
 use Yajra\Datatables\Facades\Datatables;
 
 class GuestsController extends Controller
 {
+
+    protected function parseTable($table)
+    {
+        $string = strtolower($table);
+
+        return trim(str_replace('masa', '', $table));
+    }
+
     public function landing(Request $request, $search = null)
     {
         if (is_null($search)) {
@@ -19,12 +28,7 @@ class GuestsController extends Controller
 
         if ($request->has('search.value')) {
 
-            $string = $request->search['value'];
-
-            $string = strtolower($string);
-
-            $string = trim(str_replace('masa', '', $string));
-
+            $string = $this->parseTable($request->search['value']);
 
             if (is_numeric($string)) {
                 $query->where('table', $string);
@@ -35,16 +39,25 @@ class GuestsController extends Controller
 
         }
 
+        $guests = $this->getByQuery($query);
 
-        $guests = $query->get()->map(function ($guest) {
-            return [
-                'name' => $guest->name,
-                'table' => 'Masa ' . $guest->table
-            ];
-        });
 
 
         return Datatables::collection($guests)->make(true);
+    }
+
+    protected function getByQuery($query)
+    {
+        return \Cache::rememberForever('guestListCached', function () use ($query) {
+            return $query->get()->map(function ($guest) {
+                return [
+                    'name' => $guest->name,
+                    'table' => 'Masa ' . $guest->table
+                ];
+            });
+        });
+
+
     }
 
     public function list(Request $request)
@@ -94,5 +107,73 @@ class GuestsController extends Controller
 
     }
 
+    public function importFile(Request $request)
+    {
+
+        $this->validate($request, [
+            'importFile' => 'required|file|mimes:xlsx,xls,csv',
+            'eraseOldList' => 'nullable'
+        ]);
+
+        $file = $request->file('importFile')->getPathname();
+
+        $guestList = collect();
+
+
+        \Excel::load($file, function (LaravelExcelReader $reader) use ($guestList) {
+
+            $collection = $reader->get();
+
+            $collection->each(function ($row) use ($guestList) {
+
+                $table = strtolower($row->masa);
+
+                $table = str_replace('masa', '', $table);
+                $table = trim($table);
+
+                $guestList->push([
+                    'name' => $row->invitat,
+                    'table' => $table
+                ]);
+            });
+        });
+
+        \Cache::rememberForever('importFileGuests', function () use ($guestList) {
+            return $guestList;
+        });
+
+
+        return redirect('/validate');
+
+
+    }
+
+
+    public function validateList(Request $request)
+    {
+
+        $guestList = \Cache::get('importFileGuests');
+
+        $import = $request->get('import', false);
+
+        if ($import) {
+            if ($request->get('import') == 'replace') {
+                \DB::table('guests')->delete();
+            }
+
+            $guestList = \Cache::get('importFileGuests');
+
+            \Cache::forget('guestListCached');
+            \Cache::forget('importFileGuests');
+
+
+            \DB::table('guests')->insert($guestList->all());
+
+            return redirect(route('guests'))->withSuccess('Success');
+
+        }
+
+        return view('guests.validateList', ['guests' => $guestList]);
+    }
 
 }

@@ -8,7 +8,14 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="btn-group pull-right " style="margin-top: 1em">
-                    <button type="button" class="btn btn-success add">Adauga</button>
+                    <button type="button" class="btn btn-success add">
+
+                        <i class="fa fa-plus"></i> Invitat
+
+                    </button>
+                    <button type="button" class="btn btn-warning import" data-toggle="modal" href="#import">
+                        <i class="fa fa-file-excel-o" aria-hidden="true"></i> Import
+                    </button>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -41,6 +48,10 @@
         </div>
 
     </div>
+
+
+
+    @include('guests.importModal')
 
 @stop
 
@@ -97,7 +108,6 @@
 
 
     }
-
 
     $(document).on('input', '.editable', function () {
         finalEvent($(this).closest('tr'));

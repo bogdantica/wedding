@@ -11,6 +11,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.2.1/pnotify.css" rel="stylesheet">
@@ -44,7 +45,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    Puiu si Andreea
                 </a>
             </div>
 
@@ -95,7 +96,23 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.2.1/pnotify.js"></script>
 
+<script src="{{ asset('js/wedding.js') }}"></script>
+
+
+@if(count($errors))
+    <script>
+        var errors = {!! json_encode($errors->all()) !!};
+
+        for (var i in errors) {
+            notification(errors[i], 'error');
+        }
+    </script>
+
+
+@endif
+
 @stack('scripts')
+
 
 </body>
 </html>
