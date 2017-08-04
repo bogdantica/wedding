@@ -104,7 +104,7 @@
     $(document).ready(function () {
 
         $('#searchclear').click(function () {
-            $('#guestsSearch').val('').trigger('keyup');
+            $('#guestsSearch').val('').trigger('keyup').focus();
         });
 
 
