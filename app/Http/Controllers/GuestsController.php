@@ -58,7 +58,7 @@ class GuestsController extends Controller
 //        return \Cache::rememberForever('guestListCached' . $suffix, function () use ($query) {
             return $query->get()->map(function ($guest) {
                 return [
-                    'name' => $guest->name,
+                    'name' => $guest->name . ' - Masa ' . $guest->table,
                     'table' => 'Masa ' . $guest->table
                 ];
             });
@@ -118,33 +118,38 @@ class GuestsController extends Controller
     {
 
         $this->validate($request, [
-            'importFile' => 'required|file|mimes:xlsx,xls,csv',
-            'eraseOldList' => 'nullable'
+//            'importFile' => 'required|file|mimes:xlsx,xls,csv',
+//            'eraseOldList' => 'nullable'
         ]);
 
         $file = $request->file('importFile')->getPathname();
 
         $guestList = collect();
 
-
+//       dump($file);
         \Excel::load($file, function (LaravelExcelReader $reader) use ($guestList) {
 
             $collection = $reader->get();
 
-            $collection->each(function ($row) use ($guestList) {
+//		dd($collection);
 
-                $table = strtolower($row->masa);
+            $collection->each(function ($row) use ($guestList) {
+		//dd($row,$row->masa,$row['masa']);
+                $table = strtolower($row->masa ?$row->masa :  $row['masa']);
 
                 $table = str_replace('masa', '', $table);
                 $table = trim($table);
+		if(!empty($row->invitat)){
 
                 $guestList->push([
-                    'name' => $row->invitat,
+                    'name' => ucwords($row->invitat ? $row->invitat: $row['invitat']),
                     'table' => $table
                 ]);
+		}
+
             });
         });
-
+	\Cache::forget('importFileGuests');
         \Cache::rememberForever('importFileGuests', function () use ($guestList) {
             return $guestList;
         });
@@ -173,7 +178,7 @@ class GuestsController extends Controller
 //            \Cache::forget('guestListCached');
             \Cache::forget('importFileGuests');
 
-
+	//dd($guestList->all(),$guestList->toArray());
             \DB::table('guests')->insert($guestList->all());
 
             return redirect(route('guests'))->withSuccess('Success');

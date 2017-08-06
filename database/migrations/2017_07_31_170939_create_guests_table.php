@@ -18,7 +18,7 @@ class CreateGuestsTable extends Migration
 
             $table->string('name');
 
-            $table->unsignedInteger('table');
+            $table->string('table');
 
             $table->boolean('confirmed')->default(false)->nullable();
 
